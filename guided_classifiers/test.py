@@ -18,25 +18,22 @@ from sklearn import metrics
 def main(args):
     device='cpu'
     model_folder = os.path.dirname(args["model_path"])
-    hp_file = os.path.join(model_folder, "hyperparameters.json")
-    hp = gae_util.import_hyperparams(hp_file)
+    hp_gae_file = os.path.join(model_folder, "hyperparameters_gae.json")
+    hp_classifier_file = os.path.join(model_folder, "hyperparameters_classifier.json")
+    hp_guided_classifier_file = os.path.join(model_folder, "hyperparameters.json")
+    hp_gae = gae_util.import_hyperparams(hp_gae_file)
+    hp_classifier = gae_util.import_hyperparams(hp_classifier_file)
+    hp_guided_classifier = gae_util.import_hyperparams(hp_guided_classifier_file)
+    hp = {**hp_gae, **hp_classifier, **hp_guided_classifier}
     
     print(hp)
     # Load the data
     test_graphs = gae_data.SelectGraph(args['data_folder']+"/test")
 
-    if args["compressed"]:
-        print("Compressing data...")
-        util.save_compressed_data(device, args, "test")
-        test_graphs = gae_data.SelectGraph(args['compressed_data_path']+"/test")
-    else:
-        print("Using uncompressed data")
-        test_graphs = gae_data.SelectGraph(args['data_folder'] + "/test")
-
     test_loader = DataLoader(test_graphs, batch_size=len(test_graphs)//args["num_kfolds"], shuffle=False)
 
     #Autoencoder model definition
-    model = util.choose_classifier_model(hp["classifier_type"], device, hp)
+    model = util.choose_guided_classifier_model(hp["gae_type"], hp["classifier_type"], device, hp)
 
     model.load_model(args["model_path"])
     
@@ -55,7 +52,7 @@ def plot_roc_curve(test_graphs, num_kfolds, model, model_path, output_folder):
 
     test_loader = DataLoader(test_graphs, batch_size=len(test_graphs)//num_kfolds, shuffle=False)
 
-    mean_loss, std_loss, mean_acc, std_acc, mean_roc_auc, std_roc_auc, class_outputs = test_kfold_classifier(model,test_loader, num_kfolds)
+    mean_loss, std_loss, mean_recon_loss, std_recon_loss, mean_class_loss, std_class_loss, mean_acc, std_acc, mean_roc_auc, std_roc_auc, class_outputs = test_kfold_classifier(model,test_loader, num_kfolds)
 
     plots_folder = os.path.dirname(model_path) + "/" + output_folder + "/"
     if not os.path.exists(plots_folder):
@@ -72,7 +69,7 @@ def plot_roc_curve(test_graphs, num_kfolds, model, model_path, output_folder):
         probabilities = class_outputs[:,1]
     else:
         raise ValueError("The class outputs have an unexpected shape.")
-
+    
     fpr, tpr, thresholds = metrics.roc_curve(true_labels, probabilities)
 
     
@@ -105,12 +102,16 @@ def plot_roc_curve(test_graphs, num_kfolds, model, model_path, output_folder):
 def test_kfold_classifier(model,test_loader, num_folds):
 
     all_losses = []
+    all_recon_losses = []
+    all_class_losses = []
     all_accuracies = []
     all_roc_aucs = []
     all_class_outputs = []
     for test_data in test_loader:
-        loss, class_output = model.compute_loss(test_data)
+        loss, recon_loss, class_loss, class_output = model.compute_loss(test_data)
         loss = loss.item()
+        recon_loss = recon_loss.item()
+        class_loss = class_loss.item()
         accuracy = model.compute_accuracy(test_data, class_output)
         roc_auc = model.compute_roc_auc(test_data, class_output)
 
@@ -119,16 +120,29 @@ def test_kfold_classifier(model,test_loader, num_folds):
         all_class_outputs.append(class_output)
 
         all_losses.append(loss)
+        all_recon_losses.append(recon_loss)
+        all_class_losses.append(class_loss)
         all_accuracies.append(accuracy)
         all_roc_aucs.append(roc_auc)
+
         print("Fold finished")
 
     stacked_class_outputs = np.concatenate(all_class_outputs)
+
+    print(stacked_class_outputs.shape)
 
     
     all_losses = np.array(all_losses)
     mean_loss = np.mean(all_losses)
     std_loss = np.std(all_losses)
+
+    all_recon_losses = np.array(all_recon_losses)
+    mean_recon_loss = np.mean(all_recon_losses)
+    std_recon_loss = np.std(all_recon_losses)
+
+    all_class_losses = np.array(all_class_losses)
+    mean_class_loss = np.mean(all_class_losses)
+    std_class_loss = np.std(all_class_losses)
 
     all_accuracies = np.array(all_accuracies)
     mean_accuracy = np.mean(all_accuracies)
@@ -139,8 +153,10 @@ def test_kfold_classifier(model,test_loader, num_folds):
     std_roc_auc = np.std(all_roc_aucs)
 
     print(tcols.OKCYAN + f"Test loss: {mean_loss:.4f} +/- {std_loss:.4f}" + tcols.ENDC)
+    print(tcols.OKCYAN + f"Test reconstruction loss: {mean_recon_loss:.4f} +/- {std_recon_loss:.4f}" + tcols.ENDC)
+    print(tcols.OKCYAN + f"Test classification loss: {mean_class_loss:.4f} +/- {std_class_loss:.4f}" + tcols.ENDC)
     print(tcols.OKCYAN + f"Test accuracy: {mean_accuracy:.4f} +/- {std_accuracy:.4f}" + tcols.ENDC)
     print(tcols.OKCYAN + f"Test ROC AUC: {mean_roc_auc:.4f} +/- {std_roc_auc:.4f}" + tcols.ENDC)
 
 
-    return mean_loss, std_loss, mean_accuracy, std_accuracy, mean_roc_auc, std_roc_auc, stacked_class_outputs
+    return mean_loss, std_loss, mean_recon_loss, std_recon_loss, mean_class_loss, std_class_loss, mean_accuracy, std_accuracy, mean_roc_auc, std_roc_auc, stacked_class_outputs

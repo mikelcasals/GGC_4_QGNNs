@@ -56,5 +56,5 @@ def test_kfold_gae(model,test_loader, num_folds):
     mean_loss = np.mean(all_losses)
     std_loss = np.std(all_losses)
 
-    print(tcols.OKCYAN + f"Test loss: {mean_loss:.4f} +/- {std_loss:.4f}" + tcols.ENDC)
+    print(tcols.OKCYAN + f"Test loss: {mean_loss:.6f} +/- {std_loss:.6f}" + tcols.ENDC)
 

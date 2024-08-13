@@ -12,6 +12,5 @@ class QuantumLossFunction(torch.nn.Module):
 def quantum_loss_function(class_output, y):
     y = y.float()
     class_output = class_output.float()
-
     
     return torch.nn.BCELoss(reduction='mean')(class_output, y)

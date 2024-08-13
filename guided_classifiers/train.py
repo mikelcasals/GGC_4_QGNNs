@@ -38,9 +38,8 @@ def main(args):
     
     #Model definition
     model = util.choose_guided_classifier_model(args["gae_type"], args["classifier_type"], device, args)
-    print(type(model).__mro__)
     start_time = time.time()
-
+    
     model.export_architecture(outdir)
     model.export_hyperparameters(outdir)
     model.train_model(train_loader, valid_loader, args["epochs"], outdir)

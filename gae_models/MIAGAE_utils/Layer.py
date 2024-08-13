@@ -7,7 +7,6 @@ from torch_geometric.nn import global_add_pool as g_pooling
 from torch_geometric.utils import sort_edge_index
 # from graph_ae.GATConv import GATConv
 from .SAGEAttn import SAGEAttn
-from graphAE.utils.SAGEAttn import SAGEAttn
 from torch_sparse import spspmm
 import torch.nn.functional as f
 from torch.nn import Parameter

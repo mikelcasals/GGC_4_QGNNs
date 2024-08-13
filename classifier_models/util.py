@@ -1,7 +1,7 @@
 # Description: Utility functions for classical methods.
 import os
 from gae_models import util as gae_util
-from autoencoders import data as ae_data
+from gae_models import data as ae_data
 from torch_geometric.loader import DataLoader
 from .terminal_colors import tcols
 import time
@@ -18,7 +18,7 @@ def save_compressed_data(device, args, prefix):
     print(gae_model_folder)
     hp_file = os.path.join(gae_model_folder, "hyperparameters.json")
     hp = gae_util.import_hyperparams(hp_file)
-    gae_model = gae_util.choose_ae_model(args['gae_type'], device, hp)
+    gae_model = gae_util.choose_gae_model(args['gae_type'], device, hp)
     gae_model.load_model(os.path.join(gae_model_folder, "best_model.pt"))
 
     # Load the data
@@ -26,7 +26,7 @@ def save_compressed_data(device, args, prefix):
     #valid_graphs = ae_data.SelectGraph(args['data_folder']+"valid")
     #test_graphs = ae_data.SelectGraph(args['data_folder']+"test")
 
-    loader = DataLoader(graphs, batch_size=args["batch"], shuffle=False)
+    loader = DataLoader(graphs, batch_size=1024, shuffle=False)
     #valid_loader = DataLoader(valid_graphs, batch_size=args["batch"], shuffle=False)
     #test_loader = DataLoader(test_graphs, batch_size=args["batch"], shuffle=False)
 
@@ -63,11 +63,13 @@ def choose_classifier_model(classifier_type, device, hyperparams) -> callable:
     returns :: The loaded autoencoder model with the given hyperparams.
     """
     from classifier_models.classical.classical_GNN import ClassicalGNN
+    from classifier_models.classical.classical_FC import ClassicalFC
     from classifier_models.quantum.QGNN1 import QGNN1
     from classifier_models.quantum.QGNN2 import QGNN2
     from classifier_models.quantum.QGNN3 import QGNN3
     switcher = {
         "ClassicalGNN": lambda : ClassicalGNN(device=device, hpars=hyperparams).to(device),
+        "ClassicalFC": lambda : ClassicalFC(device=device, hpars=hyperparams).to(device),
         "QGNN1": lambda : QGNN1(device=device, hpars=hyperparams).to(device),
         "QGNN2": lambda : QGNN2(device=device, hpars=hyperparams).to(device),
         "QGNN3": lambda : QGNN3(device=device, hpars=hyperparams).to(device)

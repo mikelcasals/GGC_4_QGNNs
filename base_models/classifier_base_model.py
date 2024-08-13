@@ -36,7 +36,9 @@ class Classifier(torch.nn.Module, ABC):
             self.class_loss_function = util.QuantumLossFunction()
 
         else:
-            self.class_loss_function = torch.nn.CrossEntropyLoss()
+            self.class_loss_function = util.QuantumLossFunction()
+            #self.class_loss_function = torch.nn.CrossEntropyLoss()
+
 
         self.all_train_class_loss = []
         self.all_valid_class_loss = []

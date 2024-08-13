@@ -99,6 +99,7 @@ def import_hyperparams(hyperparams_file) -> dict:
     return hyperparams
 
 def set_seeds(seed):
+    print("Setting seed", seed, "...")
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)

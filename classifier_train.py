@@ -10,13 +10,13 @@ parser.add_argument("--outdir", type=str, default = "GNN", help="Output director
 parser.add_argument("--data_folder", type=str, default="data/graphdata_105000_train50000_valid5000_test50000_part_dist_maxabs/", help="Folder containing the graph data to bed fed to the autoencoder")
 parser.add_argument("--compressed", action='store_true', help="Whether to use compressed data or not")
 parser.add_argument("--gae_type", type=str, default="SAG_model", help="Type of autoencoder to use to compress data")
-parser.add_argument("--gae_model_path", type=str, default="trained_gaes/SAG_model_for_QGNN2_fixed_full/", help="Path to the autoencoder model")
+parser.add_argument("--gae_model_path", type=str, default="trained_gaes/fixed_full/SAG_model_lr0.001_batch2048/", help="Path to the autoencoder model")
 parser.add_argument("--compressed_data_path", type=str, default="compressed_data/", help="Path to save the compressed data")
 parser.add_argument("--train_dataloader_type", type=str, default="fixed_sampling", help="Options: fixed_sampling, random_sampling, fixed_full")
 parser.add_argument("--num_samples_train", type=int, default=10000, help="Number of subsamples to be used for training")
 
 parser.add_argument("--classifier_type", type=str, default="ClassicalGNN", help="Type of classifier to be used")
-parser.add_argument("--lr", type=float, default=0.001, help="Learning rate")
+parser.add_argument("--lr", type=float, default=0.1, help="Learning rate")
 parser.add_argument("--early_stopping", type=int, default=25, help="Number of epochs to wait before early stopping")
 
 parser.add_argument("--hidden_size", type=int, default=2, help="Hidden size of the GNN")

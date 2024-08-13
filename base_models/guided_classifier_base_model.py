@@ -18,7 +18,7 @@ class GuidedClassifier(torch.nn.Module, ABC):
             "lr": 0.001,
             "early_stopping": 25,
             "num_node_features": 13,
-            "class_weight":0.7
+            "class_weight":0.5
         }
 
         self.hp_guided_classifier.update((k, hpars[k]) for k in self.hp_guided_classifier.keys() & hpars.keys())
@@ -444,4 +444,3 @@ class GuidedClassifier(torch.nn.Module, ABC):
         plt.close()
 
         print(tcols.OKGREEN + f"Loss vs epochs plot saved to {outdir}." + tcols.ENDC)
-

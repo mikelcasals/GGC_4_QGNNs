@@ -30,13 +30,15 @@ parser.add_argument('--valid_samples', type=float, default=5000, help="Number of
 parser.add_argument('--test_samples', type=float, default=50000, help="Number of data samples to use for testing")
 parser.add_argument('--seed', type=int, default=42, help="Random seed for reproducibility")
 parser.add_argument('--normalized_data_path', type=str, default='aux_data/normalized_data', help="Path in which the normalized data is saved")
-parser.add_argument('--norm_name', type=str, default='std', help="Choose which way to normalise the data. Available options: vanilla (no norm), minmax," 
+parser.add_argument('--norm_name', type=str, default='maxabs', help="Choose which way to normalise the data. Available options: vanilla (no norm), minmax," 
                     "maxabs, std, robust, power, quantile.")
 
 
 
 
 def main():
+
+    np.random.seed(args.seed)
 
     X, y = load_and_subsample_data(args.num_samples, args.part_dist, args.filter_outliers, args.subsampled_data_path)
 

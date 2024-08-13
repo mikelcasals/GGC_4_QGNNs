@@ -159,31 +159,14 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-
-energyflow/
-subsampled_data/
-augmented_data/
-graph_data/
-saved_model/
-outputs/
-outputs_1/
-
-
-trained_aes/
-trained_nns/
 data/
-compressed_data/
 aux_data/
 energyflow/
+compressed_data/
 .vscode/
-outputs_new_vqc/
-outputs_validate_all/
-outputs_validate_all_2/
-outputs_vqc_guided
-outputs_vqc_guided_learning_rate/
-trained_vqcs/
-trained_vqcs_guided/
 trained_gaes/
 trained_classifiers/
 trained_guided_classifiers/
+outputs/
+
 
