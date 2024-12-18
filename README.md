@@ -2,7 +2,7 @@
 
 ## Purpose of the Repository
 
-This repository contains code for implementing and experimenting with guided graph compression techniques for Quantum Graph Neural Networks (QGNNs). The main goal is to explore how graph compression can be used to improve the performance and efficiency of QGNNs.
+This repository contains code for implementing and experimenting with guided graph compression techniques for Quantum Graph Neural Networks (QGNNs). The main goal is to explore how guided graph compression can be used to improve the performance and efficiency of QGNNs.
 
 ## Repository Structure
 
