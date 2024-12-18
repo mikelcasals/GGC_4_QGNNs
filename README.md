@@ -1,6 +1,6 @@
 # Guided Graph Compression for Quantum Graph Neural Networks
 
-## Purpose of the Repository
+## Introduction
 
 This repository contains code for implementing and experimenting with guided graph compression techniques for Quantum Graph Neural Networks (QGNNs). The main goal is to explore how guided graph compression can be used to improve the performance and efficiency of QGNNs.
 
@@ -66,3 +66,5 @@ To preprocess data, use the scripts in the `preprocessing/` directory. For examp
 ```bash
 python preprocessing/prepare_data.py --input data/raw --output data/processed
 ```
+
+(Documentation in progress)
