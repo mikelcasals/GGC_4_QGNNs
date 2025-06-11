@@ -168,5 +168,8 @@ trained_gaes/
 trained_classifiers/
 trained_guided_classifiers/
 outputs/
+outputs_paper/
+outputs_experiment/
 
+*.sh
 

@@ -1,11 +1,11 @@
 import argparse
 
-from guided_classifiers.test import main
+from guided_classifiers.test_new import main
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("--data_folder", type=str, default="data/graphdata_105000_train50000_valid5000_test50000_part_dist_maxabs/", help="Folder containing the graph data to bed fed to the autoencoder")
-parser.add_argument("--model_path", type=str, default = "trained_guided_classifiers/guided_MIAGAE_QGNN2/MIAGAE_QGNN2_lr0.001_batch32_layers2_class_weight_0.5/best_model.pt")
+parser.add_argument("--model_path", type=str, default = "trained_guided_classifiers/guided_MIAGAE_QGNN1/MIAGAE_QGNN1_lr0.01_batch128_layers4_class_weight_0.8/best_model.pt")
 parser.add_argument("--num_kfolds", type=int, default=5, help="Number of k-folds to be used for testing")
 parser.add_argument("--compressed", action='store_true', help="Whether the data is compressed or not")
 

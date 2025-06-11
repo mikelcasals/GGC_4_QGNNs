@@ -22,6 +22,8 @@ def main(args):
     train_graphs = data.SelectGraph(args['data_folder']+"/train")
     valid_graphs = data.SelectGraph(args['data_folder']+"/valid")
 
+    print("Loaded data")
+
     if args["train_dataloader_type"] == "fixed_sampling":
         sampler = data.BalancedFixedSubsetSampler(train_graphs, args["num_samples_train"])
         train_loader = DataLoader(train_graphs, batch_size=args["batch"], sampler=sampler)
