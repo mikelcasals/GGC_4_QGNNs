@@ -1,6 +1,6 @@
 import argparse
 
-from guided_classifiers.test_new import main
+from guided_classifiers.test import main
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 

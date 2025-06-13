@@ -1,6 +1,6 @@
 import argparse
 
-from classifier_models.test_new import main
+from classifier_models.test import main
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
