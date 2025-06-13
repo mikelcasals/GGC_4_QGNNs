@@ -21,7 +21,7 @@ from terminal_colors import tcols
 parser = argparse.ArgumentParser()
 parser.add_argument('--num_samples', type=int, default=105000, help="Total number of data samples to use")
 parser.add_argument('--part_dist', type=bool, default=True, help="Sample according to the distribution of number of particles in the jets")
-parser.add_argument('--filter_outliers', type='store_true', help="Whether or not to filter out the outliers in terms of number of particles")
+parser.add_argument('--filter_outliers', type=bool, default=False, help="Whether or not to filter out the outliers in terms of number of particles")
 parser.add_argument('--subsampled_data_path', type=str, default='aux_data/subsampled_data', help="Path in which the subsampled data is saved")
 parser.add_argument('--augmented_data_path', type=str, default='aux_data/augmented_data', help="Path in which the augmented data is saved")
 parser.add_argument('--outdir', type=str, default='../data', help="Path to save the graph data for the autoencoder")
@@ -93,8 +93,6 @@ def load_and_subsample_data(num_samples, part_dist = True, filter_outliers=False
     
     if filter_outliers:
         
-        print("Filtering out outliers...")
-
         particles_per_jet = np.array([len(jet) for jet in X_all])
         # Calculate percentiles and IQR for identifying outliers
         Q1 = np.percentile(particles_per_jet, 25)
@@ -104,7 +102,6 @@ def load_and_subsample_data(num_samples, part_dist = True, filter_outliers=False
         # Calculate outlier thresholds
         lower_bound = Q1 - 1.5 * IQR
         upper_bound = Q3 + 1.5 * IQR
-        print(f"Lower bound: {lower_bound}, Upper bound: {upper_bound}")
 
         # Filter out jets that are outliers
         filtered_indices = [i for i, count in enumerate(particles_per_jet) if lower_bound <= count <= upper_bound]
@@ -455,66 +452,46 @@ def format_to_graph_and_save(train_X, train_y, valid_X, valid_y, test_X, test_y,
         else:
             return
         
-        DS_A = []
-        DS_graph_indicator = []
-        DS_graph_labels = []
-        DS_node_attributes = []
-        DS_edge_attributes = []
+        #DS_A = []
+        #DS_graph_indicator = []
+        #DS_graph_labels = []
+        #DS_node_attributes = []
+        #DS_edge_attributes = []
 
         global_node_index = 1
         global_graph_index = 1
 
-        # Second pass to process jets and scale attributes
-        for i, jet in enumerate(X):  # Again, change the slice as needed
-            graph_label = int(y[i])
 
-            for j, particle in enumerate(jet):
-                features = particle
-                DS_node_attributes.append(','.join(map(str, features)))
-                DS_graph_indicator.append(global_graph_index)
+        with open(full_data_path + prefix + '_A.txt', 'w') as f_A, \
+            open(full_data_path + prefix + '_graph_indicator.txt', 'w') as f_graph_indicator, \
+            open(full_data_path + prefix + '_graph_labels.txt', 'w') as f_graph_labels, \
+            open(full_data_path + prefix + '_node_attributes.txt', 'w') as f_node_attributes, \
+            open(full_data_path + prefix + '_edge_attributes.txt', 'w') as f_edge_attributes:
 
-                for k in range(j + 1, len(jet)):
-                    edge_feature = calculate_edge_feature(particle, jet[k])
-                    DS_A.append((global_node_index + j, global_node_index + k))
-                    DS_A.append((global_node_index + k, global_node_index + j))
-                    DS_edge_attributes.append(edge_feature)
-                    DS_edge_attributes.append(edge_feature)
+            # Second pass to process jets and scale attributes
+            for i, jet in enumerate(X):  # Again, change the slice as needed
+                graph_label = int(y[i])
 
-            global_node_index += len(jet)
-            DS_graph_labels.append(graph_label)
-            global_graph_index += 1
+                # Write graph label
+                f_graph_labels.write(f'{graph_label}\n')
 
-        print(len(DS_A))
-        # Save files
+                for j, particle in enumerate(jet):
+                    features = particle
+                    f_node_attributes.write(','.join(map(str, features)) + '\n')
+                    f_graph_indicator.write(f'{global_graph_index}\n')
 
-        with open(full_data_path + prefix + '_A.txt', 'w') as f:
-            for entry in DS_A:
-            #for i in range(len(DS_A)):
-                f.write(f'{entry[0]},{entry[1]}\n')
-                #f.write(f'{DS_A[i][0]},{DS_A[i][1]}\n')
-                #DS_A[i] = None  # Overwrite entry to free memory
-            #while DS_A:
-            #    entry = DS_A.pop(0)
-            #    f.write(f'{entry[0]},{entry[1]}\n')
-        del DS_A
-        with open(full_data_path + prefix + '_graph_indicator.txt', 'w') as f:
-            for entry in DS_graph_indicator:
-                f.write(f'{entry}\n')
-        del DS_graph_indicator
-        with open(full_data_path + prefix + '_graph_labels.txt', 'w') as f:
-            for label in DS_graph_labels:
-                f.write(f'{label}\n')
-        del DS_graph_labels
-        with open(full_data_path + prefix + '_node_attributes.txt', 'w') as f:
-            for attributes in DS_node_attributes:
-                f.write(f'{attributes}\n')
-        del DS_node_attributes
-        with open(full_data_path + prefix + '_edge_attributes.txt', 'w') as f:
-            for attribute in DS_edge_attributes:
-                f.write(f'{attribute}\n')
-        del DS_edge_attributes
+                    for k in range(j + 1, len(jet)):
+                        edge_feature = calculate_edge_feature(particle, jet[k])
+                        f_A.write(f'{global_node_index + j},{global_node_index + k}\n')
+                        f_A.write(f'{global_node_index + k},{global_node_index + j}\n')
+                        f_edge_attributes.write(f'{edge_feature}\n')
+                        f_edge_attributes.write(f'{edge_feature}\n')
 
-        print("Saved " + prefix + " graph data successfully!")
+                global_node_index += len(jet)
+                global_graph_index += 1
+
+
+            print("Saved " + prefix + " graph data successfully!")
     
     get_graph_data(train_X, train_y, data_path, "train")
     del train_X, train_y
