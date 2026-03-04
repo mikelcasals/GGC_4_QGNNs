@@ -231,7 +231,6 @@ Paper-style evaluation uses `num_kfolds=5` and reports mean ± std over folds.
 
 If you use this repository, cite the published paper and the dataset:
 - M. Casals, V. Belis, E. F. Combarro, E. Alarcon, S. Vallecorsa, and M. Grossi, *Guided graph compression for quantum graph neural networks*, **Machine Learning: Science and Technology** 6(3), 035048 (2025). DOI: `10.1088/2632-2153/adffe2`
-- Publisher page: <https://iopscience.iop.org/article/10.1088/2632-2153/adffe2>
 - Komiske, Metodiev, Thaler, *Pythia8 Quark and Gluon Jets for Energy Flow*, Zenodo, DOI: `10.5281/zenodo.3164691`
 
 ## License
