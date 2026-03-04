@@ -22,7 +22,7 @@ Autoencoders implemented:
 - `SAG_model`
 
 Classifier families implemented:
-- Classical: `ClassicalGNN`, `ClassicalFC`
+- Classical: `ClassicalGNN`
 - Quantum: `QGNN1`, `QGNN2`
 
 ## Repository Layout

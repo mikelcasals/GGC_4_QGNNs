@@ -2,12 +2,8 @@
 from gae_models.MIAGAE import MIAGAE
 from gae_models.SAG_model import SAG_model
 from classifier_models.classical.classical_GNN import ClassicalGNN
-from classifier_models.classical.classical_FC import ClassicalFC
 from classifier_models.quantum.QGNN1 import QGNN1
 from classifier_models.quantum.QGNN2 import QGNN2
-from classifier_models.quantum.QGNN3 import QGNN3
-from classifier_models.quantum.QGNN4 import QGNN4
-from classifier_models.quantum.QGNN5 import QGNN5
 
 from base_models.guided_classifier_base_model import GuidedClassifier
 
@@ -20,12 +16,8 @@ def choose_guided_classifier_model(gae_type, classifier_type, device, hyperparam
 
     classifier_classes = {
         "ClassicalGNN": ClassicalGNN,
-        "ClassicalFC": ClassicalFC,
         "QGNN1": QGNN1,
-        "QGNN2": QGNN2,
-        "QGNN3": QGNN3,
-        "QGNN4": QGNN4,
-        "QGNN5": QGNN5
+        "QGNN2": QGNN2
     }
 
     gae_class = gae_classes.get(gae_type)

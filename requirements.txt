@@ -16,4 +16,5 @@ torch-scatter==2.1.2+pt23cpu
 torch-sparse==0.6.18+pt23cpu
 torch-cluster==1.6.3+pt23cpu
 torch-spline-conv==1.2.2+pt23cpu
+autoray==0.6.7
 pennylane==0.36.0
