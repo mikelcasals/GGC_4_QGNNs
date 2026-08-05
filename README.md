@@ -7,8 +7,6 @@ The project combines:
 - downstream classifiers (classical GNNs and QGNNs),
 - a guided joint training objective that optimizes reconstruction and classification together.
 
-The implementation and experimental setup follow the manuscript in [`paper.tex`](paper.tex).
-
 ## Method Summary
 
 The paper evaluates three paradigms on jet tagging (quark vs gluon):
